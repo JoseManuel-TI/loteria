@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="num disponibles">{{ stats.disponibles }}</div>
+        <div class="label">Disponibles</div>
+    </div>
+    <div class="stat-item">
+        <div class="num reservados">{{ stats.reservados }}</div>
+        <div class="label">Reservados</div>
+    </div>
+    <div class="stat-item">
+        <div class="num pagados">{{ stats.pagados }}</div>
+        <div class="label">Pagados</div>
+    </div>
+    <div class="stat-item">
+        <div class="num" style="color:var(--gris-oscuro)">{{ stats.total }}</div>
+        <div class="label">Total</div>
+    </div>
+</div>
+
+<div class="card" style="text-align:center; margin-bottom:1.5rem;">
+    <p style="font-size:1.1rem; font-weight:600;">🎟️ Elegí tu número — <strong>$ {{ "{:,.0f}".format(precio).replace(",", ".") }}</strong> cada uno</p>
+    <p style="font-size:0.85rem; color:var(--gris); margin-top:0.3rem;">Hacé clic en un número disponible para participar</p>
+</div>
+
+<div class="grid">
+    {% for n in numeros %}
+    <a href="{{ url_for('numero_detalle', numero_id=n.id) if n.estado != 'pagado' else '#' }}"
+       class="numero {{ n.estado }}"
+       {% if n.estado == 'pagado' %}onclick="return false;"{% endif %}>
+        <span>{{ n.numero }}</span>
+        {% if n.estado == 'disponible' %}
+            <span class="precio-label">${{ (precio // 1000) }}K</span>
+        {% elif n.estado == 'reservado' %}
+            <span class="estado-badge">⏳</span>
+        {% else %}
+            <span class="estado-badge">Vendido</span>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+
+<div style="display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; font-size:0.85rem; color:var(--gris); margin-bottom:2rem;">
+    <span>🟢 Disponible</span>
+    <span>🟡 Reservado</span>
+    <span>🔴 Vendido</span>
+</div>
+
+<div class="card" style="text-align:center;">
+    <h2>🇻🇪 ¿Cómo funciona?</h2>
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:1rem;">
+        <div style="flex:1; min-width:180px; padding:0.8rem; background:var(--gris-claro); border-radius:8px;">
+            <div style="font-size:2rem;">1️⃣</div>
+            <p style="font-weight:600; margin-top:0.3rem;">Elegí un número</p>
+            <p style="font-size:0.85rem;">Clic en cualquier número verde disponible</p>
+        </div>
+        <div style="flex:1; min-width:180px; padding:0.8rem; background:var(--gris-claro); border-radius:8px;">
+            <div style="font-size:2rem;">2️⃣</div>
+            <p style="font-weight:600; margin-top:0.3rem;">Completá tus datos</p>
+            <p style="font-size:0.85rem;">Nombre, email y WhatsApp</p>
+        </div>
+        <div style="flex:1; min-width:180px; padding:0.8rem; background:var(--gris-claro); border-radius:8px;">
+            <div style="font-size:2rem;">3️⃣</div>
+            <p style="font-weight:600; margin-top:0.3rem;">Pagá tu número</p>
+            <p style="font-size:0.85rem;">Mercado Pago o transferencia bancaria</p>
+        </div>
+        <div style="flex:1; min-width:180px; padding:0.8rem; background:var(--gris-claro); border-radius:8px;">
+            <div style="font-size:2rem;">4️⃣</div>
+            <p style="font-weight:600; margin-top:0.3rem;">¡A cruzar los dedos!</p>
+            <p style="font-size:0.85rem;">El sorteo se realiza cuando se vendan todos</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

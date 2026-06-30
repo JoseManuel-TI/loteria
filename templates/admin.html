@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="info-grid">
+    <div class="info-card">
+        <div class="val" style="color:var(--verde);">{{ stats.disponibles }}</div>
+        <div class="lbl">Disponibles</div>
+    </div>
+    <div class="info-card">
+        <div class="val" style="color:var(--oro);">{{ stats.reservados }}</div>
+        <div class="lbl">Reservados</div>
+    </div>
+    <div class="info-card">
+        <div class="val" style="color:var(--rojo);">{{ stats.pagados }}</div>
+        <div class="lbl">Pagados</div>
+    </div>
+    <div class="info-card">
+        <div class="val" style="color:var(--gris-oscuro);">{{ pesos(stats.recaudado) }}</div>
+        <div class="lbl">Recaudado</div>
+    </div>
+</div>
+
+<div class="grid" style="margin-bottom:2rem;">
+    {% for n in numeros %}
+    <div class="numero {{ n.estado }}" style="cursor:default;{% if n.estado != 'pagado' %}pointer-events:none;{% endif %}">
+        <span>{{ n.numero }}</span>
+        {% if n.estado == 'disponible' %}
+            <span class="estado-badge">Libre</span>
+        {% elif n.estado == 'reservado' %}
+            <span class="estado-badge">⏳</span>
+        {% else %}
+            <span class="estado-badge">✓</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if reservados %}
+<h2 style="margin:1.5rem 0 0.5rem;">⏳ Reservados pendientes</h2>
+<div style="overflow-x:auto;">
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>N°</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>WhatsApp</th>
+            <th>Reserva</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for n in reservados %}
+        <tr>
+            <td><strong>{{ n.numero }}</strong></td>
+            <td>{{ n.comprador_nombre }}</td>
+            <td>{{ n.comprador_email }}</td>
+            <td>
+                {{ n.comprador_whatsapp or '-' }}
+                {% if n.comprador_whatsapp %}
+                <a href="https://wa.me/{{ n.comprador_whatsapp | replace(' ', '') | replace('-', '') }}?text=Hola%20{{ n.comprador_nombre | replace(' ', '%20') }}%2C%20tu%20N%C2%B0{{ n.numero }}%20est%C3%A1%20reservado.%20Esperamos%20tu%20comprobante%20%F0%9F%91%88" target="_blank" style="font-size:0.8rem;">📱</a>
+                {% endif %}
+            </td>
+            <td>{{ n.fecha_reserva[:10] if n.fecha_reserva else '-' }}</td>
+            <td class="admin-actions">
+                <form method="POST" action="{{ url_for('admin_confirmar_pago', numero_id=n.id) }}">
+                    <button class="btn btn-success btn-sm">✓ Confirmar pago</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin_liberar', numero_id=n.id) }}" onsubmit="return confirm('¿Liberar el número #{{ n.numero }}?')">
+                    <button class="btn btn-warning btn-sm">↩ Liberar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if pagados %}
+<h2 style="margin:1.5rem 0 0.5rem;">✅ Pagados</h2>
+<div style="overflow-x:auto;">
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>N°</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>WhatsApp</th>
+            <th>Pago</th>
+            <th>Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for n in pagados %}
+        <tr>
+            <td><strong>{{ n.numero }}</strong></td>
+            <td>{{ n.comprador_nombre }}</td>
+            <td>{{ n.comprador_email }}</td>
+            <td>{{ n.comprador_whatsapp or '-' }}</td>
+            <td>{{ n.fecha_pago[:10] if n.fecha_pago else '-' }}</td>
+            <td>{{ pesos(n.monto) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

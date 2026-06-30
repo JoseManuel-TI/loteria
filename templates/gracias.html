@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="text-align:center; padding:3rem 1rem;">
+    {% if n.estado == 'pagado' %}
+        <div class="gracias-icon">🎉</div>
+        <h2 style="color:var(--verde);">¡Pago confirmado!</h2>
+        <p style="font-size:1.1rem; margin:1rem 0;">
+            Gracias por sumarte a la causa. Tenés el número <strong>#{{ n.numero }}</strong>.
+        </p>
+        <div style="background:var(--gris-claro); padding:1rem; border-radius:8px; display:inline-block; margin:1rem 0;">
+            <p style="font-size:0.9rem; color:var(--gris);">Te enviamos un comprobante a <strong>{{ n.comprador_email }}</strong></p>
+        </div>
+    {% elif n.estado == 'reservado' %}
+        <div class="gracias-icon">⏳</div>
+        <h2 style="color:var(--oro);">¡Número reservado!</h2>
+        <p style="font-size:1.1rem; margin:1rem 0;">
+            Reservaste el número <strong>#{{ n.numero }}</strong>.
+        </p>
+        <div class="card" style="background:#fff3cd; text-align:left; margin-top:1rem;">
+            <h3 style="color:#856404;">📋 Datos para transferencia</h3>
+            <p style="font-size:0.9rem; margin-top:0.5rem;">
+                Transferí <strong>{{ pesos(precio) }}</strong> a la siguiente cuenta y envianos el comprobante por WhatsApp para confirmar tu número:
+            </p>
+            <ul style="margin-top:0.5rem; font-size:0.9rem; list-style:none; padding:0;">
+                <li><strong>Banco:</strong> {{ banco.banco }}</li>
+                <li><strong>Titular:</strong> {{ banco.titular }}</li>
+                <li><strong>Tipo:</strong> {{ banco.tipo }}</li>
+                <li><strong>CBU:</strong> {{ banco.cbu }}</li>
+                <li><strong>Alias:</strong> {{ banco.alias }}</li>
+            </ul>
+            <p style="font-size:0.85rem; margin-top:0.8rem; text-align:center;">
+                📱 Envianos el comprobante a <a href="{{ wa_contacto }}" target="_blank" style="font-weight:600;">nuestro WhatsApp</a>
+            </p>
+        </div>
+    {% else %}
+        <div class="gracias-icon">💪</div>
+        <h2>Gracias por tu interés</h2>
+        <p style="margin:1rem 0;">Si querés colaborar de otra forma, contactanos por WhatsApp.</p>
+    {% endif %}
+
+    <div style="margin-top:2rem;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">← Ver otros números</a>
+        <a href="{{ wa_contacto }}" target="_blank" class="btn btn-success" style="margin-left:0.5rem;">📱 WhatsApp</a>
+    </div>
+</div>
+{% endblock %}

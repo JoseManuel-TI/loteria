@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:550px; margin:2rem auto;">
+    <h2>⚙️ Configuración</h2>
+    <form method="POST" style="margin-top:1rem;">
+        <h3 style="font-size:1rem; margin:1rem 0 0.5rem; color:var(--gris-oscuro);">Precio y contacto</h3>
+        <div class="form-group">
+            <label>Precio por número ($)</label>
+            <input type="number" name="precio" value="{{ cfg.get('precio', '3000') }}" min="1">
+        </div>
+        <div class="form-group">
+            <label>WhatsApp de contacto</label>
+            <input type="text" name="wa_contacto" value="{{ cfg.get('wa_contacto', 'https://wa.me/5491122539105') }}" placeholder="https://wa.me/54...">
+        </div>
+
+        <h3 style="font-size:1rem; margin:1.5rem 0 0.5rem; color:var(--gris-oscuro);">Datos bancarios</h3>
+        <div class="form-group">
+            <label>Banco</label>
+            <input type="text" name="banco_nombre" value="{{ cfg.get('banco_nombre', 'Banco de la Nación Argentina') }}">
+        </div>
+        <div class="form-group">
+            <label>Titular</label>
+            <input type="text" name="banco_titular" value="{{ cfg.get('banco_titular', 'Jesus Gabriel Balderrama') }}">
+        </div>
+        <div class="form-group">
+            <label>Tipo de cuenta</label>
+            <input type="text" name="banco_tipo" value="{{ cfg.get('banco_tipo', 'Caja de Ahorro') }}">
+        </div>
+        <div class="form-group">
+            <label>CBU</label>
+            <input type="text" name="banco_cbu" value="{{ cfg.get('banco_cbu', '') }}">
+        </div>
+        <div class="form-group">
+            <label>Alias</label>
+            <input type="text" name="banco_alias" value="{{ cfg.get('banco_alias', 'Jesus.2605') }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+    <p style="margin-top:1rem; font-size:0.85rem; color:var(--gris);">
+        Admin password: variable <code>ADMIN_PASSWORD</code> (default: <code>admin123</code>).
+    </p>
+</div>
+{% endblock %}

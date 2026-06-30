@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card detalle-numero">
+    <div class="numero-grande">{{ n.numero }}</div>
+    {% if n.estado == 'disponible' %}
+        <div class="estado-label disponible">🟢 Disponible</div>
+        <p style="color:var(--gris); margin-bottom:0.5rem;">Precio: <strong>{{ pesos(precio) }}</strong></p>
+        <p style="font-size:0.85rem; color:var(--gris); margin-bottom:1.5rem;">Completá tus datos para reservar este número.</p>
+
+        <form method="POST" action="{{ url_for('reservar', numero_id=n.id) }}" style="max-width:400px; margin:0 auto; text-align:left;">
+            <div class="form-group">
+                <label>Nombre completo *</label>
+                <input type="text" name="nombre" required placeholder="Tu nombre">
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required placeholder="tucorreo@ejemplo.com">
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="tel" name="telefono" placeholder="+54 11 1234-5678">
+            </div>
+            <div class="form-group">
+                <label>WhatsApp</label>
+                <input type="text" name="whatsapp" placeholder="+549 11 1234-5678" value="+549">
+            </div>
+            <button type="submit" class="btn btn-success btn-block" style="margin-top:0.5rem;">
+                Reservar número — {{ pesos(precio) }}
+            </button>
+            <p style="font-size:0.75rem; color:var(--gris); text-align:center; margin-top:0.8rem;">
+                Al reservar te mostramos los datos para transferir. Tu número se reserva por 24 hs.
+            </p>
+        </form>
+    {% elif n.estado == 'reservado' %}
+        <div class="estado-label reservado">⏳ Reservado</div>
+        <p style="color:var(--gris);">Este número está pendiente de pago.</p>
+    {% else %}
+        <div class="estado-label pagado">🔴 Vendido</div>
+        <p style="color:var(--gris);">Este número ya fue adjudicado. ¡Suerte para la próxima!</p>
+    {% endif %}
+</div>
+
+<div style="text-align:center;">
+    <a href="{{ url_for('index') }}" class="btn btn-primary">← Volver al tablero</a>
+</div>
+{% endblock %}
