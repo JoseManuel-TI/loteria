@@ -1,4 +1,5 @@
 import os
+import logging
 from urllib.parse import quote
 from flask import (
     Flask, render_template, request, redirect, url_for,
@@ -6,6 +7,9 @@ from flask import (
 )
 
 import db
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -57,8 +61,13 @@ def _pesos(val):
 
 # ─── Routes publicas ───────────────────────────────────────────────
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 @app.route("/")
 def index():
+    log.info("GET /")
     numeros = db.get_numeros()
     return render_template("index.html", numeros=numeros)
 
