@@ -202,9 +202,17 @@ def admin_config():
     cfg = db.get_all_config()
     return render_template("admin_config.html", cfg=cfg)
 
-db.init_db()
+_inited = False
+
+@app.before_request
+def ensure_init():
+    global _inited
+    if not _inited:
+        db.init_db()
+        _inited = True
 
 if __name__ == "__main__":
+    db.init_db()
     print(f"⚡ {TITULO_SORTEO}")
     print(f"   http://localhost:5000")
     print(f"   Admin: http://localhost:5000/admin/login")
